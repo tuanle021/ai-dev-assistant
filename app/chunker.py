@@ -1,13 +1,20 @@
-def chunk_text(text: str, chunk_size: int = 500) -> list:
+import re
+
+def chunk_text(text: str):
     """
-    Splits text into simple character-based chunks.
-    (We keep it simple for version 1)
+    Split markdown documents by headings.
+
+    Each heading section becomes a chunk.
     """
+
+    sections = re.split(r'(?=^#{1,6}\s)', text, flags=re.MULTILINE)
 
     chunks = []
 
-    for i in range(0, len(text), chunk_size):
-        chunk = text[i:i + chunk_size]
-        chunks.append(chunk)
+    for section in sections:
+        section = section.strip()
+
+        if section:
+            chunks.append(section)
 
     return chunks
