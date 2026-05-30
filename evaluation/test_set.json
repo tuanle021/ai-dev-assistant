@@ -1,0 +1,152 @@
+[
+  {
+    "question": "What is FastAPI used for?",
+    "expected_chunks": ["FastAPI Deep Dive"],
+    "type": "definition"
+  },
+  {
+    "question": "What is FastAPI built on top of?",
+    "expected_chunks": ["FastAPI Deep Dive"],
+    "type": "fact"
+  },
+  {
+    "question": "How does FastAPI handle routing?",
+    "expected_chunks": ["Routing System"],
+    "type": "process"
+  },
+  {
+    "question": "What are path parameters in FastAPI?",
+    "expected_chunks": ["Routing System"],
+    "type": "definition"
+  },
+  {
+    "question": "What is dependency injection in FastAPI?",
+    "expected_chunks": ["Dependency Injection"],
+    "type": "concept"
+  },
+  {
+    "question": "What is Depends used for?",
+    "expected_chunks": ["Dependency Injection"],
+    "type": "concept"
+  },
+  {
+    "question": "How does FastAPI handle async operations?",
+    "expected_chunks": ["Async Programming Model"],
+    "type": "process"
+  },
+  {
+    "question": "Why is async important in FastAPI?",
+    "expected_chunks": ["Async Programming Model"],
+    "type": "reason"
+  },
+  {
+    "question": "What is middleware in FastAPI?",
+    "expected_chunks": ["Middleware"],
+    "type": "definition"
+  },
+  {
+    "question": "When does middleware run?",
+    "expected_chunks": ["Middleware"],
+    "type": "process"
+  },
+  {
+    "question": "What is request validation in FastAPI?",
+    "expected_chunks": ["Request Validation"],
+    "type": "definition"
+  },
+  {
+    "question": "How does FastAPI ensure type safety?",
+    "expected_chunks": ["Request Validation"],
+    "type": "process"
+  },
+  {
+    "question": "What happens when an invalid request is sent?",
+    "expected_chunks": ["Request Validation"],
+    "type": "process"
+  },
+  {
+    "question": "What is Pydantic used for in FastAPI?",
+    "expected_chunks": ["Request Validation"],
+    "type": "definition"
+  },
+  {
+    "question": "What is error handling in FastAPI?",
+    "expected_chunks": ["Error Handling"],
+    "type": "definition"
+  },
+  {
+    "question": "How do you define custom exceptions in FastAPI?",
+    "expected_chunks": ["Error Handling"],
+    "type": "process"
+  },
+  {
+    "question": "What is HTTPException in FastAPI?",
+    "expected_chunks": ["Error Handling"],
+    "type": "concept"
+  },
+  {
+    "question": "What is security in FastAPI?",
+    "expected_chunks": ["Security and Authentication"],
+    "type": "definition"
+  },
+  {
+    "question": "What authentication methods are supported?",
+    "expected_chunks": ["Security and Authentication"],
+    "type": "fact"
+  },
+  {
+    "question": "What is OAuth2PasswordBearer?",
+    "expected_chunks": ["Security and Authentication"],
+    "type": "concept"
+  },
+  {
+    "question": "What is JWT used for in FastAPI?",
+    "expected_chunks": ["Security and Authentication"],
+    "type": "concept"
+  },
+  {
+    "question": "How does FastAPI handle stateless authentication?",
+    "expected_chunks": ["Security and Authentication"],
+    "type": "process"
+  },
+  {
+    "question": "Can security be injected using dependencies?",
+    "expected_chunks": ["Security and Authentication", "Dependency Injection"],
+    "type": "concept"
+  },
+  {
+    "question": "What is CORS used for?",
+    "expected_chunks": ["Middleware"],
+    "type": "fact"
+  },
+  {
+    "question": "What is logging in FastAPI?",
+    "expected_chunks": ["Middleware"],
+    "type": "definition"
+  },
+  {
+    "question": "How does FastAPI handle request timing?",
+    "expected_chunks": ["Middleware"],
+    "type": "process"
+  },
+  {
+    "question": "What is ASGI in FastAPI context?",
+    "expected_chunks": ["Middleware"],
+    "type": "concept"
+  },
+  {
+    "question": "How does FastAPI ensure consistent API responses?",
+    "expected_chunks": ["Error Handling"],
+    "type": "reason"
+  },
+  {
+    "question": "What is global error handling?",
+    "expected_chunks": ["Error Handling"],
+    "type": "concept"
+  },
+  {
+    "question": "How do middleware and routing interact?",
+    "expected_chunks": ["Middleware", "Routing System"],
+    "type": "process"
+  }
+]
