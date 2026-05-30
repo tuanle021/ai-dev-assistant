@@ -19,21 +19,32 @@ def load_chunks(path="storage/chunks.json"):
 
 
 def retrieve(query: str, chunks, top_k: int = 3):
-    """
-    Very simple keyword scoring retriever.
-    """
+    query_terms = query.lower().split()
 
-    scored = []
+    scored_chunks = []
 
     for chunk in chunks:
+        text = chunk["text"].lower()
+
         score = 0
 
-        for word in query.lower().split():
-            if word in chunk["text"].lower():
-                score += 1
+        # 1. Term frequency scoring
+        for term in query_terms:
+            score += text.count(term)
 
-        scored.append((score, chunk))
+        # 2. Bonus for exact phrase match
+        if query.lower() in text:
+            score += 5
 
-    scored.sort(reverse=True, key=lambda x: x[0])
+        # 3. Normalization (avoid long chunk bias)
+        word_count = len(text.split())
+        if word_count > 0:
+            score = score / word_count * 100
 
-    return [c[1] for c in scored[:top_k]]
+        scored_chunks.append((score, chunk))
+
+    # Sort by best match
+    scored_chunks.sort(key=lambda x: x[0], reverse=True)
+
+    # Return top_k chunks
+    return [chunk for score, chunk in scored_chunks[:top_k] if score > 0]
