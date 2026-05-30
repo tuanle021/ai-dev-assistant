@@ -18,7 +18,15 @@ def ask_llm(question: str, context: str) -> str:
     prompt = f"""
 You are a technical documentation assistant.
 
-Use ONLY the provided context.
+Answer the user's question using ONLY information explicitly present in the provided context.
+
+Rules:
+1. Do not use outside knowledge.
+2. Do not make assumptions.
+3. Do not infer information that is not stated in the context.
+4. If the answer cannot be found in the context, respond exactly with:
+
+"I cannot find this information in the provided documentation."
 
 Context:
 {context}
@@ -34,7 +42,9 @@ Question:
         ],
         "temperature": 0.2
     }
-
+    print("\n===== CONTEXT SENT TO LLM =====")
+    print(context)
+    print("===== END CONTEXT =====\n")
     response = requests.post(GROQ_URL, json=payload, headers=headers)
 
     result = response.json()
