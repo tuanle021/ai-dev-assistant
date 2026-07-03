@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from app.loader import load_text_file
 from app.chunker import chunk_text
-from app.retriever import save_chunks, load_chunks, retrieve
+from app.embedder import embed_text
+from app.retriever import save_chunks, load_chunks, retrieve_embedding, retrieve
 from app.llm import ask_llm
 
 app = FastAPI()
@@ -21,7 +22,16 @@ def ingest():
     text = load_text_file("data/sample_docs/sample.md")
     chunks = chunk_text(text)
 
-    save_chunks(chunks)
+    chunks_with_embeddings = []
+
+    for i, chunk in enumerate(chunks):
+        chunks_with_embeddings.append({
+            "id": f"chunk_{i}",
+            "text": chunk,
+            "embedding": embed_text(chunk)
+        })
+
+    save_chunks(chunks_with_embeddings)    
 
     return {"message": "Documents ingested", "chunks": len(chunks)}
 
@@ -33,7 +43,7 @@ def ask(question: str):
     """
 
     chunks = load_chunks()
-    relevant = retrieve(question, chunks)
+    relevant = retrieve(question, chunks, mode="keyword")
 
     context = "\n\n".join([c["text"] for c in relevant])
 

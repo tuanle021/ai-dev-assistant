@@ -1,152 +1,184 @@
 [
   {
     "question": "What is FastAPI used for?",
-    "expected_chunks": ["FastAPI Deep Dive"],
-    "type": "definition"
+    "expected_chunks": ["chunk_0"],
+    "type": "factual",
+    "difficulty": "easy",
+    "negatives": ["chunk_3", "chunk_6"]
   },
   {
     "question": "What is FastAPI built on top of?",
-    "expected_chunks": ["FastAPI Deep Dive"],
-    "type": "fact"
+    "expected_chunks": ["chunk_0"],
+    "type": "factual",
+    "difficulty": "easy",
+    "negatives": ["chunk_5"]
   },
   {
-    "question": "How does FastAPI handle routing?",
-    "expected_chunks": ["Routing System"],
-    "type": "process"
+    "question": "How does FastAPI define API routes?",
+    "expected_chunks": ["chunk_1"],
+    "type": "procedural",
+    "difficulty": "medium",
+    "negatives": ["chunk_4", "chunk_6"]
   },
   {
-    "question": "What are path parameters in FastAPI?",
-    "expected_chunks": ["Routing System"],
-    "type": "definition"
+    "question": "What are path parameters in FastAPI used for?",
+    "expected_chunks": ["chunk_1"],
+    "type": "conceptual",
+    "difficulty": "medium",
+    "negatives": ["chunk_5"]
   },
   {
-    "question": "What is dependency injection in FastAPI?",
-    "expected_chunks": ["Dependency Injection"],
-    "type": "concept"
+    "question": "What mechanism allows FastAPI to inject dependencies into functions?",
+    "expected_chunks": ["chunk_2"],
+    "type": "conceptual",
+    "difficulty": "medium",
+    "negatives": ["chunk_1"]
   },
   {
-    "question": "What is Depends used for?",
-    "expected_chunks": ["Dependency Injection"],
-    "type": "concept"
+    "question": "How does dependency injection improve modularity in FastAPI?",
+    "expected_chunks": ["chunk_2"],
+    "type": "reasoning",
+    "difficulty": "hard",
+    "negatives": ["chunk_6"]
   },
   {
-    "question": "How does FastAPI handle async operations?",
-    "expected_chunks": ["Async Programming Model"],
-    "type": "process"
+    "question": "What is the purpose of async and await in FastAPI?",
+    "expected_chunks": ["chunk_3"],
+    "type": "conceptual",
+    "difficulty": "medium",
+    "negatives": ["chunk_1"]
   },
   {
-    "question": "Why is async important in FastAPI?",
-    "expected_chunks": ["Async Programming Model"],
-    "type": "reason"
+    "question": "Why is asynchronous execution important for FastAPI performance?",
+    "expected_chunks": ["chunk_3"],
+    "type": "reasoning",
+    "difficulty": "hard",
+    "negatives": ["chunk_0"]
   },
   {
     "question": "What is middleware in FastAPI?",
-    "expected_chunks": ["Middleware"],
-    "type": "definition"
+    "expected_chunks": ["chunk_6"],
+    "type": "factual",
+    "difficulty": "easy",
+    "negatives": ["chunk_5"]
   },
   {
-    "question": "When does middleware run?",
-    "expected_chunks": ["Middleware"],
-    "type": "process"
+    "question": "When does middleware execute in the request lifecycle?",
+    "expected_chunks": ["chunk_6"],
+    "type": "procedural",
+    "difficulty": "medium",
+    "negatives": ["chunk_1"]
   },
   {
-    "question": "What is request validation in FastAPI?",
-    "expected_chunks": ["Request Validation"],
-    "type": "definition"
+    "question": "What happens during request validation in FastAPI?",
+    "expected_chunks": ["chunk_4"],
+    "type": "procedural",
+    "difficulty": "easy",
+    "negatives": ["chunk_6"]
   },
   {
-    "question": "How does FastAPI ensure type safety?",
-    "expected_chunks": ["Request Validation"],
-    "type": "process"
+    "question": "How does FastAPI ensure type safety in requests?",
+    "expected_chunks": ["chunk_4"],
+    "type": "conceptual",
+    "difficulty": "medium",
+    "negatives": ["chunk_3"]
   },
   {
-    "question": "What happens when an invalid request is sent?",
-    "expected_chunks": ["Request Validation"],
-    "type": "process"
+    "question": "What happens when a request fails validation?",
+    "expected_chunks": ["chunk_4"],
+    "type": "factual",
+    "difficulty": "easy",
+    "negatives": ["chunk_5"]
   },
   {
     "question": "What is Pydantic used for in FastAPI?",
-    "expected_chunks": ["Request Validation"],
-    "type": "definition"
+    "expected_chunks": ["chunk_4"],
+    "type": "factual",
+    "difficulty": "easy",
+    "negatives": ["chunk_2"]
   },
   {
-    "question": "What is error handling in FastAPI?",
-    "expected_chunks": ["Error Handling"],
-    "type": "definition"
+    "question": "How does FastAPI handle errors and exceptions?",
+    "expected_chunks": ["chunk_5"],
+    "type": "conceptual",
+    "difficulty": "medium",
+    "negatives": ["chunk_4"]
   },
   {
-    "question": "How do you define custom exceptions in FastAPI?",
-    "expected_chunks": ["Error Handling"],
-    "type": "process"
+    "question": "What is HTTPException used for?",
+    "expected_chunks": ["chunk_5"],
+    "type": "factual",
+    "difficulty": "easy",
+    "negatives": ["chunk_6"]
   },
   {
-    "question": "What is HTTPException in FastAPI?",
-    "expected_chunks": ["Error Handling"],
-    "type": "concept"
+    "question": "How do custom exception handlers improve API consistency?",
+    "expected_chunks": ["chunk_5"],
+    "type": "reasoning",
+    "difficulty": "hard",
+    "negatives": ["chunk_4"]
   },
   {
-    "question": "What is security in FastAPI?",
-    "expected_chunks": ["Security and Authentication"],
-    "type": "definition"
+    "question": "What security utilities does FastAPI provide?",
+    "expected_chunks": ["chunk_7"],
+    "type": "factual",
+    "difficulty": "easy",
+    "negatives": ["chunk_2"]
   },
   {
-    "question": "What authentication methods are supported?",
-    "expected_chunks": ["Security and Authentication"],
-    "type": "fact"
+    "question": "How does JWT support stateless authentication?",
+    "expected_chunks": ["chunk_7"],
+    "type": "conceptual",
+    "difficulty": "medium",
+    "negatives": ["chunk_4"]
   },
   {
-    "question": "What is OAuth2PasswordBearer?",
-    "expected_chunks": ["Security and Authentication"],
-    "type": "concept"
+    "question": "How is OAuth2PasswordBearer used in FastAPI authentication?",
+    "expected_chunks": ["chunk_7"],
+    "type": "procedural",
+    "difficulty": "medium",
+    "negatives": ["chunk_5"]
   },
   {
-    "question": "What is JWT used for in FastAPI?",
-    "expected_chunks": ["Security and Authentication"],
-    "type": "concept"
+    "question": "Why is stateless authentication preferred in modern APIs?",
+    "expected_chunks": ["chunk_7"],
+    "type": "reasoning",
+    "difficulty": "hard",
+    "negatives": ["chunk_3"]
   },
   {
-    "question": "How does FastAPI handle stateless authentication?",
-    "expected_chunks": ["Security and Authentication"],
-    "type": "process"
+    "question": "What is the role of CORS in FastAPI middleware?",
+    "expected_chunks": ["chunk_6"],
+    "type": "conceptual",
+    "difficulty": "medium",
+    "negatives": ["chunk_5"]
   },
   {
-    "question": "Can security be injected using dependencies?",
-    "expected_chunks": ["Security and Authentication", "Dependency Injection"],
-    "type": "concept"
+    "question": "How does logging help in request debugging?",
+    "expected_chunks": ["chunk_6"],
+    "type": "conceptual",
+    "difficulty": "easy",
+    "negatives": ["chunk_3"]
   },
   {
-    "question": "What is CORS used for?",
-    "expected_chunks": ["Middleware"],
-    "type": "fact"
+    "question": "How does request timing middleware work?",
+    "expected_chunks": ["chunk_6"],
+    "type": "procedural",
+    "difficulty": "medium",
+    "negatives": ["chunk_1"]
   },
   {
-    "question": "What is logging in FastAPI?",
-    "expected_chunks": ["Middleware"],
-    "type": "definition"
+    "question": "What is ASGI in the context of FastAPI?",
+    "expected_chunks": ["chunk_6"],
+    "type": "factual",
+    "difficulty": "easy",
+    "negatives": ["chunk_0"]
   },
   {
-    "question": "How does FastAPI handle request timing?",
-    "expected_chunks": ["Middleware"],
-    "type": "process"
-  },
-  {
-    "question": "What is ASGI in FastAPI context?",
-    "expected_chunks": ["Middleware"],
-    "type": "concept"
-  },
-  {
-    "question": "How does FastAPI ensure consistent API responses?",
-    "expected_chunks": ["Error Handling"],
-    "type": "reason"
-  },
-  {
-    "question": "What is global error handling?",
-    "expected_chunks": ["Error Handling"],
-    "type": "concept"
-  },
-  {
-    "question": "How do middleware and routing interact?",
-    "expected_chunks": ["Middleware", "Routing System"],
-    "type": "process"
+    "question": "How do middleware and routing interact in FastAPI?",
+    "expected_chunks": ["chunk_6", "chunk_1"],
+    "type": "multi_hop",
+    "difficulty": "hard",
+    "negatives": ["chunk_4", "chunk_7"]
   }
 ]

@@ -1,23 +1,8 @@
-import json
 import re
-
-def save_chunks(chunks, path="storage/chunks.json"):
-    data = []
-
-    for i, chunk in enumerate(chunks):
-        data.append({
-            "id": f"chunk_{i}",
-            "text": chunk
-        })
-
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
-
-
-def load_chunks(path="storage/chunks.json"):
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+from app.embedder import embed_text
+from app.reranker import rerank
 
 # ---------------------------
 # 1. SIMPLE INTENT DETECTION
@@ -56,54 +41,137 @@ def expand_query(query: str):
 
     return list(expanded)
 
+def cosine_similarity(a, b):
+    a = np.array(a).flatten()
+    b = np.array(b).flatten()
+
+    if np.linalg.norm(a) == 0 or np.linalg.norm(b) == 0:
+        return 0.0
+
+    return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
+
 
 # ---------------------------
 # 3. MAIN RETRIEVER
 # ---------------------------
-def retrieve(query: str, chunks, top_k: int = 3):
+
+def retrieve(query: str, chunks, top_k: int = 3, mode: str = "hybrid"):
+
+    if mode == "keyword":
+        return retrieve_keyword(query, chunks, top_k)
+
+    elif mode == "embedding":
+        return retrieve_embedding(query, chunks, top_k)
+
+    elif mode == "hybrid":
+        # STEP 1: broad candidate generation (IMPORTANT: bigger pool)
+        candidates = retrieve_hybrid(query, chunks, top_k=10)
+
+        # STEP 2: rerank candidates
+        reranked = rerank(query, candidates, top_k=top_k)
+
+        return reranked
+    
+
+def retrieve_keyword(query: str, chunks, top_k: int = 3):
 
     intent = detect_intent(query)
     query_terms = expand_query(query)
 
-    scored_chunks = []
+    scored = []
 
     for chunk in chunks:
         text = chunk["text"].lower()
         score = 0
 
-        # 1. keyword + synonym match
         for term in query_terms:
             score += text.count(term) * 2
 
-        # 2. phrase match boost
         if query.lower() in text:
             score += 5
 
-        # 3. heading boost (VERY IMPORTANT)
-        if re.search(r"^#+\s.*", chunk["text"], re.MULTILINE):
-            score += 3
-
-        # 4. intent alignment boost
         if intent == "process":
-            if any(word in text for word in ["flow", "process", "request", "middleware", "routing"]):
-                score += 4
+            if any(w in text for w in ["flow", "process", "middleware", "routing"]):
+                score += 3
+
+        scored.append((score, chunk))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+
+    # ✅ filter first, then slice
+    filtered = [(s, c) for s, c in scored if s > 0]
+
+    return [c for s, c in filtered[:top_k]]
+
+def retrieve_embedding(query: str, chunks, top_k: int = 3):
+
+    query_embedding = embed_text(query)
+    scored = []
+
+    for chunk in chunks:
+        chunk_embedding = np.array(chunk["embedding"])
+
+        score = cosine_similarity(
+            [query_embedding],
+            [chunk_embedding]
+        )[0][0]
+
+        scored.append((score, chunk))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+
+    return [c for s, c in scored[:top_k]]
+
+def retrieve_hybrid(query: str, chunks, top_k: int = 10):
+
+    intent = detect_intent(query)
+    query_terms = expand_query(query)
+    query_embedding = embed_text(query)
+
+    scored = []
+
+    for chunk in chunks:
+        text = chunk["text"].lower()
+
+        # --- semantic score ---
+        chunk_embedding = np.array(chunk["embedding"])
+        semantic = cosine_similarity(
+            query_embedding,
+            chunk_embedding
+        )
+
+        # --- keyword score ---
+        keyword = 0
+        for term in query_terms:
+            keyword += text.count(term) * 2
+
+        if query.lower() in text:
+            keyword += 5
+
+        # --- intent boost ---
+        intent_score = 0
+
+        if intent == "process":
+            if any(w in text for w in ["flow", "process", "middleware", "routing"]):
+                intent_score += 3
 
         elif intent == "definition":
-            if any(word in text for word in ["is", "definition", "means", "refers"]):
-                score += 3
+            if any(w in text for w in ["is", "means", "definition"]):
+                intent_score += 2
 
         elif intent == "reason":
-            if any(word in text for word in ["because", "therefore", "why", "reason"]):
-                score += 3
+            if any(w in text for w in ["because", "reason", "therefore"]):
+                intent_score += 2
 
-        # 5. normalization
-        word_count = len(text.split())
-        if word_count > 0:
-            score = score / word_count * 100
+        # --- final score ---
+        final_score = (
+            0.65 * semantic +
+            0.25 * keyword +
+            0.10 * intent_score
+        )
 
-        scored_chunks.append((score, chunk))
+        scored.append((final_score, chunk))
 
-    # sort best first
-    scored_chunks.sort(key=lambda x: x[0], reverse=True)
+    scored.sort(key=lambda x: x[0], reverse=True)
 
-    return [chunk for score, chunk in scored_chunks[:top_k] if score > 0]
+    return [c for s, c in scored[:top_k]]
