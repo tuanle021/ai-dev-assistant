@@ -31,7 +31,7 @@ Top-K Relevant Chunks
 LLM (Groq / Llama 3.1)
     ↓
 Final Answer
-
+```
 ---
 
 ## ⚙️ Core Components
