@@ -138,3 +138,96 @@ Custom evaluation framework inspired by RAGAS-lite.
 - Strengthen lexical matching for factual queries
 - Optimize chunking strategy for precision
 - Expand evaluation dataset with harder negatives
+
+## 🚀 Demo
+
+### Ask a Question
+
+Send a request to the `/ask` endpoint with a question about the ingested documentation.
+
+Example:
+
+```bash
+POST /ask
+Content-Type: application/json
+
+{
+  "question": "What is dependency injection in FastAPI?"
+}
+```
+
+```bash
+{
+  "question": "What is dependency injection in FastAPI?",
+  "answer": "Dependency injection in FastAPI is a design pattern that allows components to be loosely coupled. It is implemented using the Depends system, where dependencies are automatically resolved and injected into path operations.",
+  "context_used": [
+    "chunk_2",
+    "chunk_6",
+    "chunk_3"
+  ]
+}
+```
+
+## ⚙️ API Endpoints
+### 1. Health Check
+```bash
+GET /
+```
+#### Response
+
+```json
+{
+  "message": "AI Dev Assistant is running"
+}
+```
+### 2. Ingest Documents
+```bash
+POST /ingest
+```
+This endpoint:
+
+- Loads source documentation
+- Splits it into chunks
+- Stores chunks with embeddings
+
+#### Response
+
+```json
+{
+  "message": "Documents ingested",
+  "chunks": 12
+}
+```
+### 3. Ask a Question (RAG Pipeline)
+```bash
+POST /ask
+```
+#### Request Body
+```json
+{
+  "question": "How does FastAPI handle async operations?"
+}
+```
+
+#### Response
+```json
+{
+  "question": "How does FastAPI handle async operations?",
+  "answer": "FastAPI supports asynchronous programming using async and await, allowing non-blocking I/O and concurrent request handling for improved performance.",
+  "context_used": [
+    "chunk_5",
+    "chunk_3",
+    "chunk_7"
+  ]
+}
+```
+
+## 🧠 What Happens Behind the API Call
+1. Question is received via /ask
+2. Retriever selects relevant chunks using:
+    - keyword scoring
+    - embedding similarity
+    - hybrid fusion
+3. Cross-encoder reranks candidates
+4. Top-K chunks are passed to the LLM
+5. LLM generates final answer
