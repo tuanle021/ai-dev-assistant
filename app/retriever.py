@@ -131,47 +131,79 @@ def retrieve_hybrid(query: str, chunks, top_k: int = 10):
     scored = []
 
     for chunk in chunks:
-        text = chunk["text"].lower()
 
-        # --- semantic score ---
+        text = chunk["text"].lower()
+        lines = chunk["text"].splitlines()
+        heading = ""
+        if lines: 
+            heading = lines[0].lower()
+
+        # ------------------------
+        # Semantic score
+        # ------------------------
         chunk_embedding = np.array(chunk["embedding"])
-        semantic = cosine_similarity(
+
+        semantic_score = cosine_similarity(
             query_embedding,
             chunk_embedding
         )
 
-        # --- keyword score ---
-        keyword = 0
+        # ------------------------
+        # Keyword score
+        # ------------------------
+        keyword_score = 0
+
         for term in query_terms:
-            keyword += text.count(term) * 2
+            keyword_score += text.count(term) * 2
+
+        # ------------------------
+        # Exact phrase score
+        # (Implemented later)
+        # ------------------------
+        phrase_score = 0
 
         if query.lower() in text:
-            keyword += 5
+            phrase_score = 1
 
-        # --- intent boost ---
+        # ------------------------
+        # Heading score
+        # (Implemented later)
+        # ------------------------
+        heading_score = 0
+
+        heading_terms = set(re.findall(r"\w+", heading))
+        heading_score = len(set(query_terms) & heading_terms)
+
+        # ------------------------
+        # Intent score
+        # ------------------------
         intent_score = 0
 
         if intent == "process":
             if any(w in text for w in ["flow", "process", "middleware", "routing"]):
-                intent_score += 3
+                intent_score = 1
 
         elif intent == "definition":
             if any(w in text for w in ["is", "means", "definition"]):
-                intent_score += 2
+                intent_score = 1
 
         elif intent == "reason":
             if any(w in text for w in ["because", "reason", "therefore"]):
-                intent_score += 2
+                intent_score = 1
 
-        # --- final score ---
+        # ------------------------
+        # Final weighted score
+        # ------------------------
         final_score = (
-            0.65 * semantic +
-            0.25 * keyword +
-            0.10 * intent_score
+            0.60 * semantic_score +
+            0.20 * keyword_score +
+            0.10 * heading_score +
+            0.05 * phrase_score +
+            0.05 * intent_score
         )
 
         scored.append((final_score, chunk))
 
     scored.sort(key=lambda x: x[0], reverse=True)
 
-    return [c for s, c in scored[:top_k]]
+    return [chunk for score, chunk in scored[:top_k]]
