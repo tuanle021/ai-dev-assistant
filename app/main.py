@@ -2,8 +2,9 @@ from fastapi import FastAPI
 from app.loader import load_text_file
 from app.chunker import chunk_text
 from app.embedder import embed_text
-from app.retriever import save_chunks, load_chunks, retrieve_embedding, retrieve
+from app.retriever import retrieve_embedding, retrieve
 from app.llm import ask_llm
+from app.storage import save_chunks, load_chunks
 
 app = FastAPI()
 

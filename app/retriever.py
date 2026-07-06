@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from app.embedder import embed_text
 from app.reranker import rerank
+from app.text_processing import tokenize
 
 # ---------------------------
 # 1. SIMPLE INTENT DETECTION
@@ -151,10 +152,12 @@ def retrieve_hybrid(query: str, chunks, top_k: int = 10):
         # ------------------------
         # Keyword score
         # ------------------------
-        keyword_score = 0
+        query_tokens = tokenize(query)
+        chunk_tokens = tokenize(text)
 
-        for term in query_terms:
-            keyword_score += text.count(term) * 2
+        common_tokens = query_tokens & chunk_tokens
+
+        keyword_score = len(common_tokens)
 
         # ------------------------
         # Exact phrase score
