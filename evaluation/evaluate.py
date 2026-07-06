@@ -1,6 +1,6 @@
 import json
 from collections import defaultdict
-from app.retriever import retrieve
+from app.retrieval_service import RetrievalService
 from app.storage import load_chunks
 
 
@@ -37,6 +37,8 @@ def mrr(expected, retrieved_chunks):
 # Evaluation logic
 # -----------------------------
 def evaluate():
+    chunks = load_chunks()
+    service = RetrievalService(chunks)
     test_set = load_test_set()
     chunks = load_chunks()
 
@@ -56,8 +58,12 @@ def evaluate():
         qtype = item.get("type", "unknown")
 
         # top 3 retrieval
-        retrieved_top3 = retrieve(question, chunks, top_k=3)
-        retrieved_top5 = retrieve(question, chunks, top_k=5)
+        retrieved_top3 = service.retrieve(question, top_k=3)
+        retrieved_top5 = service.retrieve(question, top_k=5)
+
+        print("QUESTION:", question)
+        print("TOP3 IDS:", [c.get("id") for c in retrieved_top3])
+        print("EXPECTED:", expected)
 
         retrieved_ids_3 = [c["id"] for c in retrieved_top3]
         retrieved_ids_5 = [c["id"] for c in retrieved_top5]
@@ -132,3 +138,5 @@ def evaluate():
 
 if __name__ == "__main__":
     evaluate()
+
+    

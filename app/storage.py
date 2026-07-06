@@ -1,12 +1,15 @@
 import json
+import os
 
 CHUNKS_FILE = "storage/chunks.json"
 
+def load_chunks(path="storage/chunks.json"):
 
-def load_chunks(path: str = CHUNKS_FILE):
+    if not os.path.exists(path):
+        return []   # IMPORTANT: safe fallback
+
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
-
 
 def save_chunks(chunks, path: str = CHUNKS_FILE):
     with open(path, "w", encoding="utf-8") as f:

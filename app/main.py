@@ -1,13 +1,30 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from contextlib import asynccontextmanager
 from app.loader import load_text_file
 from app.chunker import chunk_text
 from app.embedder import embed_text
-from app.retriever import retrieve_embedding, retrieve
 from app.llm import ask_llm
 from app.storage import save_chunks, load_chunks
+from app.retrieval_service import RetrievalService
+from app.models import QueryRequest
+from app.ingestion import ingest_documents
 
-app = FastAPI()
+service = None  # global reference (safe pointer)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    chunks = load_chunks()
+
+    if not chunks:
+        app.state.service = None
+        print("⚠️ No chunks found. Please run /ingest first.")
+    else:
+        app.state.service = RetrievalService(chunks)
+
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 def home():
@@ -15,43 +32,35 @@ def home():
 
 
 @app.post("/ingest")
-def ingest():
-    """
-    Loads sample docs, chunks them, stores them.
-    """
+def ingest(request: Request):
 
-    text = load_text_file("data/sample_docs/sample.md")
-    chunks = chunk_text(text)
+    chunks = ingest_documents()
 
-    chunks_with_embeddings = []
+    # rebuild runtime service
+    request.app.state.service = RetrievalService(chunks)
 
-    for i, chunk in enumerate(chunks):
-        chunks_with_embeddings.append({
-            "id": f"chunk_{i}",
-            "text": chunk,
-            "embedding": embed_text(chunk)
-        })
-
-    save_chunks(chunks_with_embeddings)    
-
-    return {"message": "Documents ingested", "chunks": len(chunks)}
+    return {
+        "status": "ingested",
+        "chunks": len(chunks)
+    }
 
 
 @app.post("/ask")
-def ask(question: str):
-    """
-    Ask questions over ingested docs.
-    """
+def ask(request: Request, payload: QueryRequest):
 
-    chunks = load_chunks()
-    relevant = retrieve(question, chunks, mode="keyword")
+    service = request.app.state.service
+
+    if service is None:
+        return {"error": "No knowledge base found. Please run /ingest first."}
+
+    relevant = service.retrieve(payload.question)
 
     context = "\n\n".join([c["text"] for c in relevant])
 
-    answer = ask_llm(question, context)
+    answer = ask_llm(payload.question, context)
 
     return {
-        "question": question,
+        "question": payload.question,
         "answer": answer,
         "context_used": [c["id"] for c in relevant]
     }
