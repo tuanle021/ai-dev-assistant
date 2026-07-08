@@ -21,13 +21,13 @@ STOPWORDS = {
     "with"
 }
 
-def tokenize(text: str):
-    """
-    Lowercase, remove punctuation and stopwords.
-    Returns a set of meaningful words.
-    """
 
-    words = re.findall(r"\b[a-zA-Z0-9]+\b", text.lower())
+def tokenize(text: str):
+
+    words = re.findall(
+        r"\b[a-zA-Z0-9]+\b",
+        text.lower()
+    )
 
     return {
         word

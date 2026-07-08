@@ -32,4 +32,7 @@ class SemanticRetriever:
 
         scored.sort(reverse=True, key=lambda x: x[0])
 
-        return [chunk for score, chunk in scored[:top_k]]
+        return [
+            chunk
+            for score, chunk in scored[:top_k]
+        ]

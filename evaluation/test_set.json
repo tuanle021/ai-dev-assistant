@@ -92,7 +92,7 @@
   },
   {
     "question": "What is Pydantic used for in FastAPI?",
-    "expected_chunks": ["chunk_4"],
+    "expected_chunks": ["chunk_5"],
     "type": "factual",
     "difficulty": "easy",
     "negatives": ["chunk_2"]
@@ -106,7 +106,7 @@
   },
   {
     "question": "What is HTTPException used for?",
-    "expected_chunks": ["chunk_5"],
+    "expected_chunks": ["chunk_7"],
     "type": "factual",
     "difficulty": "easy",
     "negatives": ["chunk_6"]
@@ -169,7 +169,7 @@
   },
   {
     "question": "What is ASGI in the context of FastAPI?",
-    "expected_chunks": ["chunk_6"],
+    "expected_chunks": ["chunk_8"],
     "type": "factual",
     "difficulty": "easy",
     "negatives": ["chunk_0"]

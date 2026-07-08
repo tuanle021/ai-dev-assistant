@@ -1,4 +1,5 @@
 from rank_bm25 import BM25Okapi
+from app.tokenizer import tokenize
 
 class BM25Retriever:
 
@@ -10,7 +11,25 @@ class BM25Retriever:
             return
 
         self.chunks = chunks
-        corpus = [c["text"].split() for c in chunks]
+        corpus = []
+
+        for c in chunks:
+
+            text = c["text"]
+
+            lines = text.splitlines()
+
+            heading = lines[0] if lines else ""
+
+            boosted_text = (
+                heading + " "
+                + heading + " "
+                + text
+            )
+
+            corpus.append(
+                list(tokenize(boosted_text))
+            )
 
         self.index = BM25Okapi(corpus)
 
@@ -19,7 +38,7 @@ class BM25Retriever:
         if self.index is None:
             return []
 
-        tokenized_query = query.split()
+        tokenized_query = list(tokenize(query))
 
         scores = self.index.get_scores(tokenized_query)
 
